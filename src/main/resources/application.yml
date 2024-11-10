@@ -1,0 +1,5 @@
+database:
+  url: jdbc:mysql://175.119.202.39:3306/coin_db
+  username: tap
+  password: znjsxm1!
+  driver-class-name: com.mysql.cj.jdbc.Driver

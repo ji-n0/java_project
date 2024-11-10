@@ -47,6 +47,8 @@ dependencies {
 
     implementation group: 'io.github.wuhewuhe', name: 'bybit-java-api', version: '1.1.5'
 
+    implementation 'org.yaml:snakeyaml:1.33'
+
     // 테스트에서 lombok사용
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
