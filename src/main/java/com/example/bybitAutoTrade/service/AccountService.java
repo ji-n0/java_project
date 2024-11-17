@@ -1,6 +1,7 @@
 package com.example.bybitAutoTrade.service;
 
 import com.example.bybitAutoTrade.DTO.ApiKeySecretDTO;
+import com.example.bybitAutoTrade.DTO.BalanceRequestDTO;
 import com.example.bybitAutoTrade.component.AccountComponent;
 import com.example.bybitAutoTrade.config.ApiConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,9 @@ public class AccountService {
     @Autowired
     private ApiConfig apiConfig;
 
-    public Object getAccountBalance(String skgType, String accountType, String coin) throws Exception {
+    public Object getAccountBalance(String skgType, BalanceRequestDTO balanceRequestDTO) throws Exception {
         ApiKeySecretDTO apiKeySecretDTO = new ApiKeySecretDTO();
         apiConfig.setApiKeySecret(skgType, apiKeySecretDTO);
-        return accountComponent.getAccountBalance(accountType, coin, apiKeySecretDTO);
+        return accountComponent.getAccountBalance(balanceRequestDTO, apiKeySecretDTO);
     }
 }

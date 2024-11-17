@@ -1,34 +1,72 @@
 package com.example.bybitAutoTrade.component;
 
 import com.bybit.api.client.domain.CategoryType;
+import com.bybit.api.client.domain.TradeOrderType;
+import com.bybit.api.client.domain.TriggerBy;
+import com.bybit.api.client.domain.position.MarginMode;
+import com.bybit.api.client.domain.position.PositionMode;
+import com.bybit.api.client.domain.position.TpslMode;
 import com.bybit.api.client.domain.position.request.PositionDataRequest;
+import com.bybit.api.client.domain.trade.PositionIdx;
 import com.bybit.api.client.restApi.BybitApiAsyncTradeRestClient;
 import com.bybit.api.client.service.BybitApiClientFactory;
 import com.example.bybitAutoTrade.DTO.ApiKeySecretDTO;
-import org.springframework.beans.factory.annotation.Value;
+import com.example.bybitAutoTrade.DTO.OrderRequestDTO;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+@Component
 public class OrderComponent {
-    public void setLeverage(String symbol, int buyLeverage, int sellLeverage, ApiKeySecretDTO apiKeySecretDTO){
+    public void setLeverage(OrderRequestDTO orderRequestDTO, ApiKeySecretDTO apiKeySecretDTO){
         var positionClient = BybitApiClientFactory.newInstance(apiKeySecretDTO.getApiKey(), apiKeySecretDTO.getApiSecret()).newAsyncPositionRestClient();
-        var setLeverageRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol(symbol).buyLeverage(Integer.toString(buyLeverage)).sellLeverage(Integer.toString(sellLeverage)).build();
+
+        if(orderRequestDTO.getBuyLeverage() == 0){
+            orderRequestDTO.setBuyLeverage(orderRequestDTO.getSellLeverage());
+        }
+        if(orderRequestDTO.getSellLeverage() == 0){
+            orderRequestDTO.setSellLeverage(orderRequestDTO.getBuyLeverage());
+        }
+
+        var setLeverageRequest = PositionDataRequest
+                .builder()
+                .category(CategoryType.LINEAR)
+                .symbol(orderRequestDTO.getSymbol())
+                .buyLeverage(Integer.toString(orderRequestDTO.getBuyLeverage()))
+                .sellLeverage(Integer.toString(orderRequestDTO.getSellLeverage()))
+                .build();
+
+        var tradingStopRequest = PositionDataRequest
+                .builder()
+                .category(CategoryType.LINEAR)
+                .symbol(orderRequestDTO.getSymbol())
+                .tpslMode(TpslMode.FULL)
+                .positionIdx(PositionIdx.ONE_WAY_MODE)
+                .tpTriggerBy(TriggerBy.MARK_PRICE)
+                .slTriggerBy(TriggerBy.MARK_PRICE)
+                .tpOrderType(TradeOrderType.MARKET)
+                .takeProfit(Double.toString(orderRequestDTO.getTakeProfit()))
+                .stopLoss("0")
+                .build();
+
+        positionClient.setTradingStop(tradingStopRequest, System.out::println);
         positionClient.setPositionLeverage(setLeverageRequest, System.out::println);
     }
 
-    public String makeOrder(String symbol, String side, int qty, ApiKeySecretDTO apiKeySecretDTO){
+    public String makeOrder(OrderRequestDTO orderRequestDTO, ApiKeySecretDTO apiKeySecretDTO){
         BybitApiClientFactory factory = BybitApiClientFactory.newInstance(apiKeySecretDTO.getApiKey(), apiKeySecretDTO.getApiSecret());
         BybitApiAsyncTradeRestClient client = factory.newAsyncTradeRestClient();
         String result = "SUCCESS";
         Map<String, Object> order =Map.of(
                 "category", "linear",
-                "symbol", symbol,
-                "side", side,
+                "symbol", orderRequestDTO.getSymbol(),
+                "side", orderRequestDTO.getSide(),
                 "orderType", "Market",
-                "qty", Integer.toString(qty),
+                "qty", Integer.toString(orderRequestDTO.getQty()),
                 "reduceOnly", false,
                 "closeOnTrigger", false
         );
+
         client.createOrder(order, System.out::println);
         return result;
     }

@@ -1,10 +1,13 @@
 package com.example.bybitAutoTrade.service;
 
 import com.example.bybitAutoTrade.DTO.ApiKeySecretDTO;
+import com.example.bybitAutoTrade.DTO.OrderRequestDTO;
 import com.example.bybitAutoTrade.component.OrderComponent;
 import com.example.bybitAutoTrade.config.ApiConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class OrderService {
     @Autowired
     private OrderComponent orderComponent;
@@ -12,10 +15,11 @@ public class OrderService {
     @Autowired
     private ApiConfig apiConfig;
 
-    public void makeOrder(String skcType, String symbol, int buyLeverage, int sellLeverage, String side, int qty){
+    public void enterPosition(String skcType, OrderRequestDTO orderRequestDTO) throws Exception{
         ApiKeySecretDTO apiKeySecretDTO = new ApiKeySecretDTO();
         apiConfig.setApiKeySecret(skcType, apiKeySecretDTO);
-        orderComponent.setLeverage(symbol, buyLeverage, sellLeverage, apiKeySecretDTO);
-        orderComponent.makeOrder(symbol,side,qty, apiKeySecretDTO);
+        orderComponent.setLeverage(orderRequestDTO, apiKeySecretDTO);
+        orderComponent.makeOrder(orderRequestDTO, apiKeySecretDTO);
     }
+
 }

@@ -8,12 +8,12 @@ import com.bybit.api.client.domain.account.request.AccountDataRequest;
 import com.bybit.api.client.domain.position.request.PositionDataRequest;
 import com.bybit.api.client.restApi.BybitApiAsyncTradeRestClient;
 import com.bybit.api.client.service.BybitApiClientFactory;
+import com.example.bybitAutoTrade.DTO.BalanceRequestDTO;
 import com.example.bybitAutoTrade.service.AccountService;
 import com.example.bybitAutoTrade.service.OrderService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AccountController {
@@ -22,7 +22,13 @@ public class AccountController {
     private AccountService accountService;
 
     @GetMapping("/account/balance")
-    public Object getAccountBalance(@RequestParam(required = true) String skgType, @RequestParam(required = false) String accountType, @RequestParam(required = false) String coin) throws Exception {
-        return accountService.getAccountBalance(skgType, accountType, coin);
+    public Object getAccountBalance(@RequestParam(required = true) String skgType, @ModelAttribute BalanceRequestDTO balanceRequestDTO){
+        Object result = null;
+        try{
+            result =  accountService.getAccountBalance(skgType, balanceRequestDTO);
+        }catch (Exception e) {
+            result = e.getMessage();
+        }
+        return result;
     }
 }
