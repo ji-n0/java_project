@@ -3,8 +3,6 @@ package com.example.bybitAutoTrade.component;
 import com.bybit.api.client.domain.CategoryType;
 import com.bybit.api.client.domain.TradeOrderType;
 import com.bybit.api.client.domain.TriggerBy;
-import com.bybit.api.client.domain.position.MarginMode;
-import com.bybit.api.client.domain.position.PositionMode;
 import com.bybit.api.client.domain.position.TpslMode;
 import com.bybit.api.client.domain.position.request.PositionDataRequest;
 import com.bybit.api.client.domain.trade.PositionIdx;
@@ -46,7 +44,7 @@ public class OrderComponent {
                 .slTriggerBy(TriggerBy.MARK_PRICE)
                 .tpOrderType(TradeOrderType.MARKET)
                 .takeProfit(Double.toString(orderRequestDTO.getTakeProfit()))
-                .stopLoss("0")
+                .stopLoss(Double.toString(orderRequestDTO.getStopLoss()))
                 .build();
 
         positionClient.setTradingStop(tradingStopRequest, System.out::println);
@@ -62,7 +60,7 @@ public class OrderComponent {
                 "symbol", orderRequestDTO.getSymbol(),
                 "side", orderRequestDTO.getSide(),
                 "orderType", "Market",
-                "qty", Integer.toString(orderRequestDTO.getQty()),
+                "qty", Double.toString(orderRequestDTO.getQty()),
                 "reduceOnly", false,
                 "closeOnTrigger", false
         );

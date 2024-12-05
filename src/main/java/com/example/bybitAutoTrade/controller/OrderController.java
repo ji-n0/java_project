@@ -11,7 +11,7 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @PostMapping("/order/enterPosition")
+    @PostMapping("/api/order/enterPosition")
     public Object enterPosition(@RequestParam(required = true) String skgType,@Valid @ModelAttribute OrderRequestDTO orderRequestDTO) {
         Object result = null;
         try {

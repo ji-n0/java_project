@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 import lombok.Setter;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Getter
 @Setter
@@ -14,7 +13,7 @@ public class OrderRequestDTO {
     private int buyLeverage = 0;
     private int sellLeverage = 0;
     private String side;
-    private int qty;
+    private double qty;
     private double takeProfit = 0;
-    private double lossStop = 0;
+    private double stopLoss = 0;
 }

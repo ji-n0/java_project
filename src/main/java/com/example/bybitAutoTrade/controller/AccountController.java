@@ -21,7 +21,7 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    @GetMapping("/account/balance")
+    @GetMapping("/api/account/balance")
     public Object getAccountBalance(@RequestParam(required = true) String skgType, @ModelAttribute BalanceRequestDTO balanceRequestDTO){
         Object result = null;
         try{
