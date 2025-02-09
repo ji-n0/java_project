@@ -4,3 +4,8 @@ spring:
     username: tap
     password: znjsxm1!
     driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update  # 스키마 자동 생성
+    show-sql: true  # SQL 쿼리 로그 출력

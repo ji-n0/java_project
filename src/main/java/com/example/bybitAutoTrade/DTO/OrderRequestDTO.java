@@ -16,4 +16,5 @@ public class OrderRequestDTO {
     private double qty;
     private double takeProfit = 0;
     private double stopLoss = 0;
+    private String strategyId;
 }

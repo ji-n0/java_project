@@ -6,7 +6,9 @@ import com.bybit.api.client.domain.TriggerBy;
 import com.bybit.api.client.domain.position.TpslMode;
 import com.bybit.api.client.domain.position.request.PositionDataRequest;
 import com.bybit.api.client.domain.trade.PositionIdx;
+import com.bybit.api.client.domain.trade.request.TradeOrderRequest;
 import com.bybit.api.client.restApi.BybitApiAsyncTradeRestClient;
+import com.bybit.api.client.restApi.BybitApiTradeRestClient;
 import com.bybit.api.client.service.BybitApiClientFactory;
 import com.example.bybitAutoTrade.DTO.ApiKeySecretDTO;
 import com.example.bybitAutoTrade.DTO.OrderRequestDTO;
@@ -51,10 +53,10 @@ public class OrderComponent {
         positionClient.setPositionLeverage(setLeverageRequest, System.out::println);
     }
 
-    public String makeOrder(OrderRequestDTO orderRequestDTO, ApiKeySecretDTO apiKeySecretDTO){
+    public Object makeOrder(OrderRequestDTO orderRequestDTO, ApiKeySecretDTO apiKeySecretDTO){
+        Object result;
         BybitApiClientFactory factory = BybitApiClientFactory.newInstance(apiKeySecretDTO.getApiKey(), apiKeySecretDTO.getApiSecret());
-        BybitApiAsyncTradeRestClient client = factory.newAsyncTradeRestClient();
-        String result = "SUCCESS";
+        BybitApiTradeRestClient client = factory.newTradeRestClient();
         Map<String, Object> order =Map.of(
                 "category", "linear",
                 "symbol", orderRequestDTO.getSymbol(),
@@ -65,7 +67,19 @@ public class OrderComponent {
                 "closeOnTrigger", false
         );
 
-        client.createOrder(order, System.out::println);
+        result = client.createOrder(order);
         return result;
+    }
+
+    public Object saveOrderHist(String orderId, ApiKeySecretDTO apiKeySecretDTO){
+        BybitApiClientFactory factory = BybitApiClientFactory.newInstance(apiKeySecretDTO.getApiKey(), apiKeySecretDTO.getApiSecret());
+        BybitApiTradeRestClient client = factory.newTradeRestClient();
+        var tradeOrderRequest = TradeOrderRequest
+                .builder()
+                .orderId(orderId)
+                .category(CategoryType.LINEAR)
+                .build();
+
+        return client.getOpenOrders(tradeOrderRequest);
     }
 }
