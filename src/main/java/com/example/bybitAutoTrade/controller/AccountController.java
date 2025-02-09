@@ -31,4 +31,15 @@ public class AccountController {
         }
         return result;
     }
+
+    @GetMapping("/api/account/positionInfo")
+    public Object getAccountPositionInfo(@RequestParam(required = true) String skgType, @ModelAttribute BalanceRequestDTO balanceRequestDTO){
+        Object result = null;
+        try{
+            result =  accountService.getPositionInfo(skgType, balanceRequestDTO);
+        }catch (Exception e) {
+            result = e.getMessage();
+        }
+        return result;
+    }
 }

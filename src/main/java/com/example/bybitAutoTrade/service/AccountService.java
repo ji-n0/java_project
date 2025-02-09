@@ -20,4 +20,10 @@ public class AccountService {
         apiConfig.setApiKeySecret(skgType, apiKeySecretDTO);
         return accountComponent.getAccountBalance(balanceRequestDTO, apiKeySecretDTO);
     }
+
+    public Object getPositionInfo(String skgType, BalanceRequestDTO balanceRequestDTO) throws Exception {
+        ApiKeySecretDTO apiKeySecretDTO = new ApiKeySecretDTO();
+        apiConfig.setApiKeySecret(skgType, apiKeySecretDTO);
+        return accountComponent.getPositionInfo(balanceRequestDTO, apiKeySecretDTO);
+    }
 }
