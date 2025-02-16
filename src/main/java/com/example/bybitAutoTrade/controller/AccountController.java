@@ -16,12 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/account")
 public class AccountController {
 
     @Autowired
     private AccountService accountService;
 
-    @GetMapping("/api/account/balance")
+    @GetMapping("/balance")
     public Object getAccountBalance(@RequestParam(required = true) String skgType, @ModelAttribute BalanceRequestDTO balanceRequestDTO){
         Object result = null;
         try{
@@ -32,7 +33,7 @@ public class AccountController {
         return result;
     }
 
-    @GetMapping("/api/account/positionInfo")
+    @GetMapping("/positionInfo")
     public Object getAccountPositionInfo(@RequestParam(required = true) String skgType, @ModelAttribute BalanceRequestDTO balanceRequestDTO){
         Object result = null;
         try{

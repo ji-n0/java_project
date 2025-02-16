@@ -7,11 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/order")
 public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @PostMapping("/api/order/enterPosition")
+    @PostMapping("/enterPosition")
     public Object enterPosition(@RequestParam(required = true) String skgType,@Valid @ModelAttribute OrderRequestDTO orderRequestDTO) {
         Object result = null;
         try {
