@@ -15,4 +15,7 @@ public interface CoinStrategyUsageRepository extends JpaRepository<CoinStrategyU
             "WHERE c.id.memberId = :memberId")
     List<StrategyUsageDTO> findByIdMemberId(@Param("memberId") String memberId);
 
+    @Query("SELECT c.id.strategyId FROM CoinStrategyUsage c WHERE c.id.memberId = :memberId")
+    List<String> findUsedStrategyIdsByMemberId(@Param("memberId") String memberId);
+
 }

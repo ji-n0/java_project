@@ -4,6 +4,7 @@ import com.example.bybitAutoTrade.DTO.StrategyDTO;
 import com.example.bybitAutoTrade.DTO.StrategyUsageDTO;
 import com.example.bybitAutoTrade.service.ReactService;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,9 +41,14 @@ public class ReactController {
         return ResponseEntity.ok("✅ 전략 Active 값 저장 완료!");
     }
 
-    @GetMapping("/strategy/details")
-    public ResponseEntity<StrategyDTO> getStrategyDetails(@RequestParam String strategyId) {
-        StrategyDTO strategy = reactService.findStrategyById(strategyId);
-        return ResponseEntity.ok(strategy);
+    @GetMapping("/strategy/all")
+    public List<StrategyDTO> getAllStrategies() {
+        return reactService.getAllStrategies();
     }
+
+    @GetMapping("/strategy/available")
+    public List<StrategyDTO> getAvailableStrategies(@RequestParam String memberId) {
+        return reactService.getAvailableStrategies(memberId);
+    }
+
 }

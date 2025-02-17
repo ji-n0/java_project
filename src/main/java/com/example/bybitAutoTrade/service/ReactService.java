@@ -39,11 +39,39 @@ public class ReactService {
         return coinStrategyUsageRepository.findByIdMemberId(memberId);
     }
 
-    public StrategyDTO findStrategyById(String strategyId) {
-        return coinStrategyRepository.findById(strategyId)
-                .map(strategy -> new StrategyDTO(strategy.getStrategyName(),strategy.getTicker(), strategy.getStrategyParam(),
-                        strategy.getLeverage(), strategy.getTakeProfitRate(), strategy.getStopLossRate()))
-                .orElseThrow(() -> new IllegalArgumentException("전략 ID가 존재하지 않습니다."));
+    public List<StrategyDTO>  getAllStrategies() {
+        List<CoinStrategy> strategies = coinStrategyRepository.findAll();
+        return strategies.stream()
+                .map(strategy -> new StrategyDTO(
+                        strategy.getStrategyId(),
+                        strategy.getStrategyName(),
+                        strategy.getTicker(),
+                        strategy.getStrategyParam(),
+                        strategy.getLeverage(),
+                        strategy.getTakeProfitRate(),
+                        strategy.getStopLossRate()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    // ✅ 특정 회원이 추가할 수 있는 전략 조회
+    public List<StrategyDTO> getAvailableStrategies(String memberId) {
+        // 현재 사용 중인 전략 ID 목록 가져오기
+        List<String> usedStrategyIds = coinStrategyUsageRepository.findUsedStrategyIdsByMemberId(memberId);
+
+        // 사용되지 않은 전략들만 필터링
+        return coinStrategyRepository.findAll().stream()
+                .filter(strategy -> !usedStrategyIds.contains(strategy.getStrategyId()))
+                .map(strategy -> new StrategyDTO(
+                        strategy.getStrategyId(),
+                        strategy.getStrategyName(),
+                        strategy.getTicker(),
+                        strategy.getStrategyParam(),
+                        strategy.getLeverage(),
+                        strategy.getTakeProfitRate(),
+                        strategy.getStopLossRate()
+                ))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -62,13 +90,11 @@ public class ReactService {
                     .orElseThrow(() -> new IllegalArgumentException("전략을 찾을 수 없습니다."));
 
             if (existingUsage == null) {
-                if ("Y".equals(dto.getActiveYn())) {
-                    CoinStrategyUsage newUsage = new CoinStrategyUsage();
-                    newUsage.setId(id);
-                    newUsage.setStrategy(strategy); // ✅ 반드시 설정 필요
-                    newUsage.setActiveYn(dto.getActiveYn());
-                    coinStrategyUsageRepository.save(newUsage);
-                }
+                CoinStrategyUsage newUsage = new CoinStrategyUsage();
+                newUsage.setId(id);
+                newUsage.setStrategy(strategy); // ✅ 반드시 설정 필요
+                newUsage.setActiveYn(dto.getActiveYn());
+                coinStrategyUsageRepository.save(newUsage);
             } else {
                 existingUsage.setStrategy(strategy); // ✅ 기존 데이터도 strategy 설정 확인
                 existingUsage.setActiveYn(dto.getActiveYn());

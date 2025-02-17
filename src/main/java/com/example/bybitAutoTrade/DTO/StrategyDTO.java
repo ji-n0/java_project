@@ -10,6 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StrategyDTO {
+    private String strategyId;
     private String strategyNm;
     private String ticker;
     private String strategyParam;
