@@ -5,4 +5,4 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 }
-rootProject.name = 'bybitAutoTrade'
+rootProject.name = 'java_project'
